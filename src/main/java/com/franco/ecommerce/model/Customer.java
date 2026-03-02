@@ -1,6 +1,5 @@
 package com.franco.ecommerce.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,21 +12,22 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Producto {
+public class Customer {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
-    private Long idProducto;
+    private Long customerId;
 
     @Column(nullable = false)
-    private String nombre;
-    @Column(nullable = false)
-    private int stock;
-    @Column(nullable = false)
-    private Double precio;
+    private String firstName;
 
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+    @Column(nullable = false)
+    private String lastName;
+
+    @Column(nullable = false, unique = true)
+    private String dni;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<VentaDetalle> ventaDetalles;
-
+    private List<Order> orders;
 }

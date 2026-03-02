@@ -8,27 +8,26 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.ALL;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cliente {
+public class Product {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
-    private Long idCliente;
+    private Long productId;
 
     @Column(nullable = false)
-    private String nombre;
-    @Column(nullable = false)
-    private String apellido;
-    @Column(nullable = false, unique = true)
-    private String dni;
+    private String name;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @Column(nullable = false)
+    private int stock;
+
+    @Column(nullable = false)
+    private Double price;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Venta> ventas;
-
+    private List<OrderItem> orderItems;
 }

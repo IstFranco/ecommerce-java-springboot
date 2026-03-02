@@ -10,26 +10,27 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "orders") // Evita el conflicto con la palabra reservada ORDER de SQL
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Venta {
+public class Order {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
-    private Long idVenta;
+    private Long orderId;
 
     @Column(nullable = false)
-    private Date fecha;
+    private Date date;
+
     @Column(nullable = false)
     private Double total;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
-    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<VentaDetalle> ventaDetalles;
-
+    private List<OrderItem> orderItems;
 }
