@@ -132,6 +132,34 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "create order",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"idCustomer\": 2,\r\n  \"items\": [\r\n    {\r\n      \"idProduct\": 1,\r\n      \"quantity\": 4\r\n    },\r\n    {\r\n      \"idProduct\": 2,\r\n      \"quantity\": 1\r\n    }\r\n  ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "orders"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }
