@@ -35,7 +35,7 @@ public class OrderService {
         return orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + id));
     }
 
-    @Transactional //If anything fails it cancel the purchease
+    @Transactional // If any step fails, the purchase process is rolled back to ensure data consistency.
     public Order createOrder(OrderRequestDTO ordReqdto) {
         Customer customer = customerRepository.findById(ordReqdto.getIdCustomer()).orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + ordReqdto.getIdCustomer()));
         Order order = new Order();
