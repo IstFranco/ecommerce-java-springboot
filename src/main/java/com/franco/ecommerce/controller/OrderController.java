@@ -3,6 +3,7 @@ package com.franco.ecommerce.controller;
 import com.franco.ecommerce.dto.OrderRequestDTO;
 import com.franco.ecommerce.model.Order;
 import com.franco.ecommerce.service.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public Order createOrder(@RequestBody OrderRequestDTO orderReqDTO) {
+    public Order createOrder(@Valid @RequestBody OrderRequestDTO orderReqDTO) {
         return orderService.createOrder(orderReqDTO);
     }
 
