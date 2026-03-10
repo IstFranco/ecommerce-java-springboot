@@ -30,9 +30,6 @@ public class ProductService {
         if (productRepository.existsByName(prod.getName())) {
             throw new IllegalArgumentException("A product with name: " + prod.getName() + " already exists.");
         }
-        if (prod.getPrice() < 0 || prod.getStock() < 0) {
-            throw new IllegalArgumentException("Price and stock cannot be negative.");
-        }
         return productRepository.save(prod);
     }
 
@@ -52,9 +49,10 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
-        if (productRepository.existsById(id)) {
-            productRepository.deleteById(id);
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException("Product not found with ID: " + id);
         }
+        productRepository.deleteById(id);
     }
 
 }

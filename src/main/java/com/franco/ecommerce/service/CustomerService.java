@@ -22,7 +22,7 @@ public class CustomerService {
     }
     public Customer createCustomer(Customer cust){
         if (customerRepository.existsByDni(cust.getDni())) {
-            throw new IllegalArgumentException("A customer whit DNI " + cust.getDni() + " already exists.");
+            throw new IllegalArgumentException("A customer with DNI " + cust.getDni() + " already exists.");
         }
         return customerRepository.save(cust);
     }
@@ -41,7 +41,7 @@ public class CustomerService {
     }
     public String deleteCustomer(Long id) {
         if (!customerRepository.existsById(id)) {
-            throw new IllegalArgumentException("Custoer not found with ID: " + id);
+            throw new IllegalArgumentException("Customer not found with ID: " + id);
         }
         customerRepository.deleteById(id);
 
