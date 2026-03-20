@@ -69,8 +69,24 @@
         "disableBodyPruning": true
       },
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcmFuY28udGVzdEBwb3N0YS5jb20iLCJpYXQiOjE3NzM5NTg5MTIsImV4cCI6MTc3NDA0NTMxMn0.nQ2imp4DAXufmKx9G7iFrJsH7CxlNn8p0xo8AiKlUgk",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
-        "header": [],
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmcmFuY28udGVzdEBwb3N0YS5jb20iLCJpYXQiOjE3NzM5NTg5MTIsImV4cCI6MTc3NDA0NTMxMn0.nQ2imp4DAXufmKx9G7iFrJsH7CxlNn8p0xo8AiKlUgk",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "",
@@ -81,13 +97,15 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/customers",
+          "raw": "http://localhost:8080/api/v1/customers",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "8080",
           "path": [
+            "api",
+            "v1",
             "customers"
           ]
         }
@@ -186,6 +204,72 @@
             "orders"
           ]
         }
+      },
+      "response": []
+    },
+    {
+      "name": "Auth - register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstName\": \"Messi\",\r\n    \"lastName\": \"Admin\",\r\n    \"email\": \"messi.admin@posta.com\",\r\n    \"password\": \"mesias_password_2026\",\r\n    \"dni\": \"45123789\",\r\n    \"role\": \"ADMIN\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/auth/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Auth - login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"messi.admin@posta.com\",\r\n    \"password\": \"mesias_password_2026\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": []
       },
       "response": []
     }
