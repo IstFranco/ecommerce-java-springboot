@@ -2,6 +2,7 @@ package com.franco.ecommerce.service;
 
 import com.franco.ecommerce.model.Product;
 import com.franco.ecommerce.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +54,16 @@ public class ProductService {
             throw new IllegalArgumentException("Product not found with ID: " + id);
         }
         productRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void reduceStock(Long id, int quantity) {
+        Product product = getProductById(id);
+        if (product.getStock() < quantity) {
+            throw new IllegalArgumentException("Insufficient stock for product: " + product.getName());
+        }
+        product.setStock(product.getStock() - quantity);
+        productRepository.save(product);
     }
 
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "order_item")
 public class OrderItem {
 // THIS IS THE BRIDGE TABLE FOR THE N:M RELATIONSHIP BETWEEN PRODUCT AND ORDER.
 

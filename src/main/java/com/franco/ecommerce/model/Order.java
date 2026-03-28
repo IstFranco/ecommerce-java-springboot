@@ -3,15 +3,17 @@ package com.franco.ecommerce.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "orders") // Evita el conflicto con la palabra reservada ORDER de SQL
+@Table(name = "orders")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
@@ -21,10 +23,10 @@ public class Order {
     private Long orderId;
 
     @Column(nullable = false)
-    private Date date;
+    private LocalDateTime date;
 
     @Column(nullable = false)
-    private Double total;
+    private double total;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")

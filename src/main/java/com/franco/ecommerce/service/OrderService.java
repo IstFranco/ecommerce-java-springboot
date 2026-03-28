@@ -37,28 +37,33 @@ public class OrderService {
 
     @Transactional // If any step fails, the purchase process is rolled back to ensure data consistency.
     public Order createOrder(OrderRequestDTO ordReqdto) {
-        Customer customer = customerRepository.findById(ordReqdto.getIdCustomer()).orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + ordReqdto.getIdCustomer()));
+        String email = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer customer = customerRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("Customer not found with email: " + email));
+
         Order order = new Order();
         order.setCustomer(customer);
-        order.setDate(new Date());
+        order.setDate(java.time.LocalDateTime.now());
+
         List<OrderItem> orderItems = new ArrayList<>();
-        double totalAmount = 0.0;
-        for (OrderItemDTO itemDto : ordReqdto.getItems()) {
-            Product product = productRepository.findById(itemDto.getIdProduct()).orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + itemDto.getIdProduct()));
-            if (product.getStock() < itemDto.getQuantity()) {
-                throw new IllegalArgumentException("Not enough stock for product: " + product.getName());
+        double totalAmount = 0;
+
+        for (OrderItemDTO itemDTO : ordReqdto.getItems()) {
+            Product product = productRepository.findById(itemDTO.getIdProduct()).orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + itemDTO.getIdProduct()));
+
+            if (product.getStock() < itemDTO.getQuantity()) {
+                throw new IllegalArgumentException("Product stock less than or equal to stock amount");
             }
-            product.setStock(product.getStock() - itemDto.getQuantity());
-            productRepository.save(product);
+
+            product.setStock(product.getStock() - itemDTO.getQuantity());
 
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(product);
-            orderItem.setQuantity(itemDto.getQuantity());
+            orderItem.setQuantity(itemDTO.getQuantity());
             orderItem.setUnitPrice(product.getPrice());
             orderItem.setOrder(order);
 
             orderItems.add(orderItem);
-            totalAmount += (product.getPrice() * itemDto.getQuantity());
+            totalAmount += (product.getPrice() * itemDTO.getQuantity());
         }
 
         order.setOrderItems(orderItems);
@@ -76,8 +81,6 @@ public class OrderService {
             Product product = item.getProduct();
             //Add the ordered quantity back to the current stock
             product.setStock(product.getStock() + item.getQuantity());
-            //Save the updated product
-            productRepository.save(product);
         }
 
         //Now that the stock is safely restored, delete the order

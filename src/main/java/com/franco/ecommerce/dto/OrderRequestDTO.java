@@ -15,9 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderRequestDTO {
 
-    @NotNull(message = "Customer ID cannot be null")
-    private Long idCustomer;
-
     @NotEmpty(message = "Item list cannot be empty")
     @Valid //This tells Spring to also validate the items inside the list
     private List<OrderItemDTO> items;

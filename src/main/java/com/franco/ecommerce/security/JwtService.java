@@ -19,8 +19,14 @@ public class JwtService {
     private String secretKey;
 
     public String generateToken(UserDetails userDetails) {
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(a -> a.getAuthority())
+                .orElse("ROLE_USER");
+
         return Jwts.builder()
                 .setSubject(userDetails.getUsername()) //User's email
+                .claim("role", role)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) //24 hours calidity
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -58,7 +64,6 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        System.out.println("DEBUG - Usando Secret: " + secretKey);
         byte[] keyBytes = secretKey.getBytes();
         return Keys.hmacShaKeyFor(keyBytes);
     }

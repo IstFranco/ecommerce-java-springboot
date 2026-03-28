@@ -1,5 +1,6 @@
 package com.franco.ecommerce.dto;
 
+import com.franco.ecommerce.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,5 @@ public class RegisterRequest {
     private String email;
     private String password;
     private String dni;
+    private Role role;
 }

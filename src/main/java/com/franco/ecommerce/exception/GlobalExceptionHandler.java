@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleDataIntegrity(org.springframework.dao.DataIntegrityViolationException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Data Conflict");
-        error.put("message", "This email or DNI is already registered. ");
+        error.put("message", "Database constraint violation: Check if IDs exist or if there are duplicates.");
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 

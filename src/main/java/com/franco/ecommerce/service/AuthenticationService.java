@@ -29,33 +29,35 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-
-        var user = customerRepository.findByEmail(request.getEmail())
-                .orElseThrow();
-
+        var user = customerRepository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
 
+    public AuthenticationResponse registerAdmin(RegisterRequest request) {
+        return registerWithRole(request, Role.ADMIN);
+    }
+
     public AuthenticationResponse register(RegisterRequest request) {
+        return registerWithRole(request, Role.USER);
+    }
+
+    private AuthenticationResponse registerWithRole(RegisterRequest request, Role role) {
         var user = Customer.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .dni(request.getDni())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .role(role)
                 .build();
 
         customerRepository.save(user);
-
-        var jwtToken = jwtService.generateToken(user);
+        var  jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
-
 }
