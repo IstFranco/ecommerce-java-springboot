@@ -1,27 +1,29 @@
-# 🛒 E-Commerce Backend API
+# 🛒 Franco eCommerce - Backend API
 
-RESTful API developed in **Java and Spring Boot** to manage the core operations of an e-commerce platform. This project is designed with a strong focus on robust business logic and architectural best practices.
+A robust RESTful API developed with **Java 21** and **Spring Boot 3.4**, designed to manage the core operations of an e-commerce platform with a strong focus on security, data consistency, and architectural best practices.
 
-## 🚀 Technologies Used
-* **Language:** Java 21
-* **Framework:** Spring Boot (Spring Web, Spring Data JPA)
-* **Database:** PostgreSQL
-* **Tools:** Hibernate, Lombok, Postman, Maven
+## 🚀 Tech Stack
+* **Language:** Java 21 (JDK 21)
+* **Framework:** Spring Boot 3.4
+* **Security:** Spring Security + **JWT** (Role-based Authentication & Authorization)
+* **Persistence:** Spring Data JPA / Hibernate
+* **Database:** PostgreSQL (Hosted on **Supabase**)
+* **Infrastructure:** Docker & Docker Compose
+* **Documentation:** Swagger UI (OpenAPI 3)
 
-## ⚙️ Core Features
-* **Product Management:** Full CRUD operations with strict real-time **stock** control.
-* **Customer Management:** User data registration and administration.
-* **Order Processing:** * Creation of purchase orders with multiple items (`OrderItem`).
-  * Automatic stock deduction when processing a sale.
-  * Freezing the `unitPrice` at the exact moment of the transaction to maintain accounting integrity against future price variations.
-  * Automatic calculation of the order's `total` amount.
+## ⚙️ Core Features & Business Logic
+* **Transactional Order Processing:** Multi-item purchase management ensuring data integrity through `@Transactional` boundaries.
+* **Real-time Stock Control:** Automatic stock validation before sale confirmation and automated restocking upon order deletion.
+* **Hardened Security:** Implementation of **DTOs** to prevent entity exposure and **Global Exception Handling** (`@ControllerAdvice`) for standardized API responses.
+* **Price Integrity:** Unit price "freezing" at the moment of transaction to protect historical accounting data against future price variations.
 
-## 🏗️ Architecture
-The project follows a multi-layer design (Controller, Service, Repository, Model) to ensure separation of concerns and maintainability. A relational database approach was implemented, handling 1:N and N:M relationships with manual bridge tables for historical data control.
+## 🏗️ Architecture & Design
+The project follows a **N-Layer design** (Controller, Service, Repository, Model) ensuring a clean separation of concerns. A secure architecture was implemented where user identity is retrieved directly from the **SecurityContext (JWT)**, eliminating the need for insecure client ID passing in requests.
 
-## 🛣️ Roadmap / Next Steps
-- [ ] Implementation of DTOs to avoid exposing DB entities.
-- [ ] Global exception handling (`@ControllerAdvice`).
-- [ ] Security and Authentication with JWT (Spring Security).
-- [ ] Containerization with Docker.
-- [ ] Cloud Deployment (AWS / Render).
+## 📦 Local Installation & Usage (Docker)
+
+1. Clone the repository.
+2. Create a `.env` file in the root directory (use `application.properties` as a reference for keys).
+3. Run the following command:
+   ```bash
+   docker-compose up --build
