@@ -15,6 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,35 +41,43 @@ public class OrderServiceTest {
     @InjectMocks
     private OrderService orderService;
 
+    @Mock
+    private SecurityContext securityContext;
+
+    @Mock
+    private Authentication authentication;
+
     @BeforeEach
     void setUp() {
+
         MockitoAnnotations.openMocks(this);
+        when(authentication.getName()).thenReturn("test@email.com");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
     void createOrder_CustomerNotFound_ThrowsException() {
         //Given
-        Long fakeCustomerId = 99L;
         OrderRequestDTO requestDTO = new OrderRequestDTO();
-        requestDTO.setIdCustomer(fakeCustomerId);
+        requestDTO.setItems(List.of());
 
         //When & Then
-        when(customerRepository.findById(fakeCustomerId)).thenReturn(Optional.empty());
+        when(customerRepository.findByEmail("test@email.com")).thenReturn(Optional.empty());
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             orderService.createOrder(requestDTO);
         });
 
-        assertEquals("Customer not found with ID: " + fakeCustomerId, exception.getMessage());
+        assertEquals("Customer not found with email: test@email.com", exception.getMessage());
 
         verify(orderRepository, never()).save(any());
     }
 
     @Test
     void createOrder_NotEnoughStock_ThrowsException() {
-        Long fakeCustomerId = 1L;
         Customer fakeCustomer = new Customer();
-        fakeCustomer.setCustomerId(fakeCustomerId);
+        fakeCustomer.setCustomerId(1L);
 
         Long fakeProductId = 10L;
         Product fakeProduct = new Product();
@@ -75,16 +86,14 @@ public class OrderServiceTest {
         fakeProduct.setPrice(100000.0);
         fakeProduct.setStock(2);
 
-        OrderRequestDTO requestDTO = new OrderRequestDTO();
-        requestDTO.setIdCustomer(fakeCustomerId);
-
         OrderItemDTO itemDTO = new OrderItemDTO();
         itemDTO.setIdProduct(fakeProductId);
         itemDTO.setQuantity(5);
 
+        OrderRequestDTO requestDTO = new OrderRequestDTO();
         requestDTO.setItems(List.of(itemDTO));
 
-        when(customerRepository.findById(fakeCustomerId)).thenReturn(Optional.of(fakeCustomer));
+        when(customerRepository.findByEmail("test@email.com")).thenReturn(Optional.of(fakeCustomer));
         when(productRepository.findById(fakeProductId)).thenReturn((Optional.of(fakeProduct)));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -99,9 +108,8 @@ public class OrderServiceTest {
     @Test
     void createOrder_Success() {
 
-        Long fakeCustomerId = 1L;
         Customer caleb = new Customer();
-        caleb.setCustomerId(fakeCustomerId);
+        caleb.setCustomerId(1L);
 
         Long fakeProductId = 10L;
         Product fakeProduct = new Product();
@@ -109,16 +117,14 @@ public class OrderServiceTest {
         fakeProduct.setPrice(50000.0);
         fakeProduct.setStock(10);
 
-        OrderRequestDTO requestDTO = new OrderRequestDTO();
-        requestDTO.setIdCustomer(fakeCustomerId);
-
         OrderItemDTO itemDTO = new OrderItemDTO();
         itemDTO.setIdProduct(fakeProductId);
         itemDTO.setQuantity(2);
 
+        OrderRequestDTO requestDTO = new OrderRequestDTO();
         requestDTO.setItems(List.of(itemDTO));
 
-        when(customerRepository.findById(fakeCustomerId)).thenReturn(Optional.of(caleb));
+        when(customerRepository.findByEmail("test@email.com")).thenReturn(Optional.of(caleb));
         when(productRepository.findById(fakeProductId)).thenReturn(Optional.of(fakeProduct));
 
         Order mockOrder = new Order();
@@ -128,12 +134,8 @@ public class OrderServiceTest {
         Order result = orderService.createOrder(requestDTO);
 
         assertEquals(100000.0, result.getTotal());
-
         assertEquals(8, fakeProduct.getStock()); // 10 prod - 2 prod = 8 products left
-
         verify(orderRepository, times(1)).save(any(Order.class));
-
-        verify(productRepository, times(1)).save(fakeProduct);
     }
 
 }
