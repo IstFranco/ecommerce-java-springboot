@@ -46,5 +46,14 @@ public class GlobalExceptionHandler {
         error.put("message", "Invalid email or password");
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDenied(
+            org.springframework.security.access.AccessDeniedException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Access Denied");
+        error.put("message", "You don't have permission to access this resource.");
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
 }
 
