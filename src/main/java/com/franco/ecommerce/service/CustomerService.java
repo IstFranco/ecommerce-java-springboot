@@ -20,12 +20,19 @@ public class CustomerService {
     public Customer getCustomerById(Long id) {
         return customerRepository.findById(id).orElseThrow( () -> new IllegalArgumentException("Customer not found with ID: " + id));
     }
+
+    public Customer getCustomerByEmail(String email) {
+        return customerRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found with email: " + email));
+    }
+
     public Customer createCustomer(Customer cust){
         if (customerRepository.existsByDni(cust.getDni())) {
             throw new IllegalArgumentException("A customer with DNI " + cust.getDni() + " already exists.");
         }
         return customerRepository.save(cust);
     }
+
     public Customer updateCustomer(Long id, Customer customerDetails) {
         Customer existingCustomer = getCustomerById(id);
 
@@ -39,6 +46,7 @@ public class CustomerService {
 
         return customerRepository.save(existingCustomer);
     }
+
     public String deleteCustomer(Long id) {
         if (!customerRepository.existsById(id)) {
             throw new IllegalArgumentException("Customer not found with ID: " + id);

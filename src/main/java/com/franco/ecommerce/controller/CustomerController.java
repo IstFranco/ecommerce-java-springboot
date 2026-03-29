@@ -7,6 +7,7 @@ import com.franco.ecommerce.enums.Role;
 import com.franco.ecommerce.model.Customer;
 import com.franco.ecommerce.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,13 @@ public class CustomerController {
     @GetMapping("/{id}")
     public CustomerResponseDTO getCustomerById(@PathVariable Long id) {
         return toDTO(customerService.getCustomerById(id));
+    }
+
+    @GetMapping("/me")
+    public CustomerResponseDTO getMyProfile() {
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication().getName();
+        return toDTO(customerService.getCustomerByEmail(email));
     }
 
     @PostMapping
