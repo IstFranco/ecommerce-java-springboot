@@ -1,6 +1,7 @@
 package com.franco.ecommerce.dto;
 
 import com.franco.ecommerce.enums.Role;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +17,6 @@ public class RegisterRequest {
     private String email;
     private String password;
     private String dni;
+    @Schema(hidden = true)
     private Role role;
 }
